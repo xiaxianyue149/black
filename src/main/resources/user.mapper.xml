@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace命名空间，当前文档的一个标识符-->
+<mapper namespace="com.wanghao.oa.user.dto.UserMapper">
+    <!--resultMap结果集的映射-->
+    <!--id是当前resultMap的唯一标识-->
+    <!--type是结果的类型-->
+    <resultMap id="UserResultMap" type="com.wanghao.oa.user.dto.User">
+        <id property="userId" column="user_id" javaType="java.lang.Integer"/>
+        <result property="userName" column="user_name" javaType="java.lang.String"/>
+        <result property="userEmail" column="user_email" javaType="java.lang.String"/>
+        <result property="userPassword" column="user_password" javaType="java.lang.String"/>
+        <result property="userSalt" column="user_salt" javaType="java.lang.String"/>
+        <result property="userSex" column="user_sex" javaType="java.lang.Integer"/>
+        <!-- 配置多对一配置（一对一类似） -->
+        <association property="department" javaType="com.wanghao.oa.user.dto.Department">
+            <id property="dpId" column="dp_id" javaType="java.lang.Integer"/>
+            <result property="dpName" column="dp_name" javaType="java.lang.String"/>
+        </association>
+    </resultMap>
+
+    <!--查询语句-->
+    <!--resultType 结果集的类型：-->
+    <select id="login" resultType="com.wanghao.oa.user.dto.User">
+        select * from user where user_name = #{user_name} and user_password = #{user_password}
+    </select>
+
+    <!--resultMap就是结果集映射-->
+    <select id="findUserByName" resultMap="UserResultMap">
+      select * from department d join user u on u.dp_id=d.dp_id and u.user_name = #{user_name}
+    </select>
+    <select id="findAllUser" resultMap="UserResultMap">
+        select * from user
+    </select>
+</mapper>
